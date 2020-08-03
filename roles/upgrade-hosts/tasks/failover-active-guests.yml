@@ -1,0 +1,16 @@
+
+
+
+- name: Failover Active guest "{{ item.key }}" to standby
+  bigip_command:
+    commands:
+      - run sys failover standby
+    provider:
+      server: "{{ item.key }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  when: item.value == 'active'
+  delegate_to: localhost
+  tags:
+    - upgrade-hosts

@@ -1,0 +1,11 @@
+- name: Wait for "{{ item }}" to come back after deploy mode 
+  bigip_wait:
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 3600
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - upgrade-hosts

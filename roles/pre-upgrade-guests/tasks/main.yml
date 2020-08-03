@@ -1,0 +1,6 @@
+- include_tasks: f5-pre-upgrade-tasks.yml
+  with_items: "{{ vcmp_guests }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - pre-upgrade-guests

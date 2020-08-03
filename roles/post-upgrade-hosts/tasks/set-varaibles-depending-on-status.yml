@@ -1,0 +1,22 @@
+
+- name: Initializing the upgrade success variable
+  set_fact:
+    upgrade_host_success: false
+  tags:
+    - post-upgrade-hosts
+
+
+- name: Comparing pre and post trunk status
+  set_fact:
+    upgrade_host_success: "{{ pre_trunk_statuses | difference(post_trunk_statuses) }}"
+
+
+- name: Pause the execution if the upgrade was unsuccessful
+  pause:
+    seconds: 7200
+  when: not upgrade_host_success | bool
+  tags:
+    - post-upgrade-hosts
+
+
+

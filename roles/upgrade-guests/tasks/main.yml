@@ -1,0 +1,16 @@
+--- 
+
+
+- include_tasks: prep-volume.yml
+  with_items: "{{ vcmp_guests }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - upgrade-guests
+
+- include_tasks: upgrade-standby-guest.yml
+  with_items: "{{ vcmp_guests }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - upgrade-guests

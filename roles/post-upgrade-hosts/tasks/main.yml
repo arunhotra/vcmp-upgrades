@@ -1,0 +1,11 @@
+- include_tasks: collect-post-trunk-status-standby.yml
+  when:
+    standby_host|bool == true
+  tags:
+    - post-upgrade-hosts
+
+
+
+- include_tasks: set-varaibles-depending-on-trunk-status.yml
+  tags:
+    - post-upgrade-hosts

@@ -1,0 +1,51 @@
+- name: Collect BIG-IP facts to get information about the VCMP guests inside a VCMP host
+  bigip_device_facts:
+    gather_subset:
+      - vcmp-guests
+    provider:
+      server: "{{ inventory_hostname }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  register: guests
+  delegate_to: localhost
+  tags:
+    - always
+
+
+- name: List the entire details about the vcmp guests
+  debug:
+    msg: "{{ guests }}"
+  tags:
+    - always
+
+- name: Populate vcmp guests
+  vars:
+  set_fact:
+    vcmp_guests: "{{ vcmp_guests|default([]) + [ item.hostname ] }}"
+  with_items: "{{ guests.vcmp_guests }}"
+  tags:
+    - always
+
+- name: List the vcmp guests array - [vcmp_guests]
+  debug:
+    msg: "{{ vcmp_guests }}"
+  tags:
+    - always
+
+
+- name: Populate vcmp guest names
+  vars:
+  set_fact: 
+    vcmp_guests_names: "{{ vcmp_guests_names|default([]) + [ item.full_path ] }}"
+  with_items: "{{ guests.vcmp_guests }}"
+  tags:
+    - always
+
+- name: List the vcmp guests names array - [vcmp_guests_names]
+  debug:
+    msg: "{{ vcmp_guests_names }}"
+  tags:
+    - always
+
+

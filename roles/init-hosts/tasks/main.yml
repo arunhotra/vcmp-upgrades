@@ -1,0 +1,46 @@
+
+- import_tasks: initialize-variables.yml
+  tags:
+    - always
+
+- include_tasks: initialize-success-variable.yml
+  when: upgrade_success is not defined
+  tags:
+    - always
+
+
+- import_tasks: populate-hosts.yml
+  tags:
+    - always
+
+
+- import_tasks: populate-guests.yml
+  tags:
+    - always
+
+- include_tasks: populate-active-standby-guest-pairs.yml
+  with_items: "{{ vcmp_guests }}"
+  tags:
+    - always
+
+- include_tasks: assign-standby-host.yml
+  when: "'{{ vcmp_hosts[1] }}' in inventory_hostname and not upgrade_success | bool"       
+  tags:
+    - always
+
+- include_tasks: assign-standby-host-post-first-upgrade.yml
+  when: "'{{ vcmp_hosts[0] }}' in inventory_hostname  and upgrade_success | bool"           
+  tags:
+    - always
+
+- name: Do you want to continue
+  debug:
+    msg: "The playbook will pause and please follow the PAUSE instructions"
+  tags:
+    - always
+
+- name: pause for 7200 seconds
+  pause:
+    seconds: 7200
+  tags:
+    - always

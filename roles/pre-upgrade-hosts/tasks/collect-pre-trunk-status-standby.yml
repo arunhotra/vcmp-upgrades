@@ -1,0 +1,28 @@
+- name: Initializing the custom variables used in branching  
+  vars:
+  set_fact:
+    pre_trunk_statuses: {}
+  tags:
+    - pre-upgrade-hosts
+
+- name: COLLECT BIG-IP trunks using the FACTS module
+  bigip_device_info:
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+    gather_subset:
+      - trunks
+  register: trunks
+  tags:
+    - pre-upgrade-hosts
+
+- name: Extracting the status of the pools
+  set_fact:
+    pre_trunk_statuses: "{{ pre_trunk_statuses|default({}) | combine({'trunkName':item.name,'status':item.availability_status})  }}"
+  loop: "{{ trunks.trunks }}"
+  tags:
+    - pre-upgrade-hosts
+
+

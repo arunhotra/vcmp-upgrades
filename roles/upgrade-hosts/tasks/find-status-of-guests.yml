@@ -1,0 +1,41 @@
+- name: Collect BIG-IP facts to determine VCMP guests
+  bigip_device_info:
+    gather_subset:
+      - devices
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  register: guests
+  delegate_to: localhost
+  tags:
+    - upgrade-hosts
+
+
+
+- name: List the vcmp guests array
+  debug:
+    msg: "{{ vcmp_guests }}"
+  tags:
+    - upgrade-hosts
+
+
+- name: Find the failover status of the VCMP guests
+  set_fact:
+    vcmp_guests_standby_status: "{{ vcmp_guests_standby_status|default({}) | combine({guest.hostname:guest.failover_state}) }}"
+  when: guest.hostname in vcmp_guests
+  loop: "{{ guests.devices }}"
+  loop_control:
+    loop_var: guest
+  tags:
+    - upgrade-hosts
+
+
+- name: List the vcmp guests array
+  debug:
+    msg: "{{ vcmp_guests_standby_status }}"
+  tags:
+    - upgrade-hosts
+
+

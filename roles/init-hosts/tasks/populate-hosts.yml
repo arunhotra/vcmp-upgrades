@@ -1,0 +1,14 @@
+- name: Create a List of VCMP hosts to be Upgraded
+  vars:
+  set_fact:
+    vcmp_hosts: "{{ vcmp_hosts|default([]) + [ item ] }}"
+  with_inventory_hostnames:
+    - vcmp_hosts
+  tags:
+    - always
+
+- name: List the VCMP Hosts to be Upgraded
+  debug:
+    msg: "{{ vcmp_hosts }}"
+  tags:
+    - always

@@ -1,0 +1,12 @@
+- name: VCMP guest provision mode "{{ item }}"
+  bigip_vcmp_guest:
+    name: "{{ item }}"
+    state: provisioned
+    provider: 
+      server: "{{ inventory_hostname }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  register: result
+  tags:
+    - upgrade-hosts

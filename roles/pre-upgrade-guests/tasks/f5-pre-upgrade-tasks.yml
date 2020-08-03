@@ -1,0 +1,43 @@
+
+- name: Fetch a qkview from the VCMP guest "{{ item }}"
+  bigip_qkview:
+    dest: "{{ BACKUPS }}/{{ ITSM }}-{{ item }}.qkview"
+    exclude_core: yes
+    exclude: all
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - pre-upgrade-guests
+
+- name: Download a new UCS from the VCMP guest "{{ item }}"
+  bigip_ucs_fetch:
+    src: "{{ ITSM }}_{{ item }}.ucs"
+    dest: "{{ BACKUPS }}/{{ ITSM }}-{{ item }}.ucs"
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - pre-upgrade-guests
+  
+- name: Disable snmp traps on the VCMP guest "{{ item }}"
+  bigip_snmp:
+    agent_authentication_traps: disabled
+    agent_status_traps: disabled
+    device_warning_traps: disabled
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  when: standby_host|bool == true
+  delegate_to: localhost
+  tags:
+    - pre-upgrade-guests
+

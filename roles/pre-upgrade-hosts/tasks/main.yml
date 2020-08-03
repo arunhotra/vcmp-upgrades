@@ -1,0 +1,22 @@
+--- 
+
+  # - import_tasks: f5-upload-image.yml
+  #   tags:
+  #     - pre-upgrade-hosts
+
+  - import_tasks: f5-pre-upgrade-tasks.yml
+    tags:
+      - pre-upgrade-hosts
+
+
+  - import_tasks: collect-pre-trunk-status-standby.yml
+    tags:
+      - pre-upgrade-hosts
+
+      
+  # - pause:
+  #     seconds: 10
+
+  # - import_tasks: f5-pre-upgrade-relicense-STANDBY.yml
+  #   tags:
+  #     - pre-upgrade-hosts

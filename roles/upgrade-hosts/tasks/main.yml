@@ -1,0 +1,51 @@
+--- 
+
+
+- include_tasks: find-status-of-guests.yml
+  with_items: "{{ vcmp_guests }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+- include_tasks: failover-active-guests.yml
+  with_dict: "{{ vcmp_guests_standby_status }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+- include_tasks: provision-mode-guests.yml
+  with_items: "{{ vcmp_guests_names }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+- include_tasks: prep-volume.yml
+  when: 
+    standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+
+
+- include_tasks: upgrade-standby-host.yml
+  when:
+   standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+- include_tasks: deployed-mode-guests.yml
+  with_items: "{{ vcmp_guests_names }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+- include_tasks: wait-for-guest-deploy-mode.yml
+  with_items: "{{ vcmp_guests }}"
+  when:
+    standby_host|bool == true
+  tags:
+    - upgrade-hosts

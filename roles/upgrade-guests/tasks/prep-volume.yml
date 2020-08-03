@@ -1,0 +1,52 @@
+- name: Initialize a variable for volumes for guest "{{ item }}"
+  vars:
+  set_fact:
+    volumes: []
+  tags:
+    - upgrade-guests
+
+- name: Collect BIG-IP facts to determine the active and available software-volumes for guest "{{ item }}"
+  bigip_device_facts:
+    gather_subset:
+      - software-volumes
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  register: ltm
+  delegate_to: localhost
+  tags:
+    - upgrade-guests
+
+- name: Find volume to install not active for guest "{{ item }}"
+  set_fact:
+    volumes: "{{ volumes|default([])+ [ item.name ] }}"
+  when: 'item.active == "no"' 
+  loop: "{{ ltm.software_volumes }}"
+  tags:
+    - upgrade-guests
+
+- name: Parse the volume to get rid of the slash character for guest "{{ item }}"
+  set_fact:
+    volume: "{{ volumes[0].split(\"/\")[0] }}"
+  tags:
+    - upgrade-guests
+
+
+- name: Debug the volume value for guest "{{ item }}"
+  debug:
+    msg:  "{{ volume }}"
+  tags:
+    - upgrade-guests
+
+- name: Delete the closest inactive volume for guest "{{ item }}"
+  uri:
+    url: "https://{{ item }}/mgmt/tm/sys/software/volume/{{ volume }}"
+    user: "{{ username }}"
+    password: "{{ password }}"
+    method: DELETE
+    validate_certs: no
+  delegate_to: localhost
+  tags:
+    - upgrade-guests

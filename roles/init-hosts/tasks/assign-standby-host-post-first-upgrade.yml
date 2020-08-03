@@ -1,0 +1,16 @@
+
+
+- name: Assign one of the VCMP hosts as standby host after the standby successful upgrade
+  set_fact:
+    standby_host : True
+  tags:
+    - always
+
+
+
+- name: List the standby_host fact
+  debug:
+    msg: "{{ standby_host }}"
+  tags:
+    - always
+
