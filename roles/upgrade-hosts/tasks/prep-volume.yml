@@ -27,26 +27,4 @@
   tags:
     - upgrade-hosts
 
-- name: Parse the volume to get rid of the slash character
-  set_fact:
-    volume: "{{ volumes[0].split(\"/\")[0] }}"
-  tags:
-    - upgrade-hosts
 
-
-- name: Debug the volume value
-  debug:
-    msg:  "{{ volume }} {{ inventory_hostname }} {{ standby }}"
-  tags:
-    - upgrade-hosts
-
-- name: Delete the closest inactive volume
-  uri:
-    url: "https://{{ inventory_hostname }}/mgmt/tm/sys/software/volume/{{ volume }}"
-    user: "{{ username }}"
-    password: "{{ password }}"
-    method: DELETE
-    validate_certs: no
-  delegate_to: localhost
-  tags:
-    - upgrade-hosts

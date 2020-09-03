@@ -5,10 +5,10 @@
   tags:
     - post-upgrade-hosts
 
-- name: COLLECT BIG-IP trunks using the FACTS module
+- name: COLLECT BIG-IP trunks for the host "{{ inventory_hostname }}" using the FACTS module
   bigip_device_info:
     provider:
-      server: "{{ item }}"
+      server: "{{ inventory_hostname }}"
       user: "{{ username }}"
       password: "{{ password }}"
       validate_certs: no
@@ -20,7 +20,7 @@
 
 - name: Extracting the status of the pools
   set_fact:
-    post_trunk_statuses: "{{ post_trunk_statuses|default({}) | combine({'trunkName':item.name,'status':item.availability_status})  }}"
+    post_trunk_statuses: "{{ post_trunk_statuses|default({}) | combine({item.name:item.media_status})  }}"
   loop: "{{ trunks.trunks }}"
   tags:
     - post-upgrade-hosts

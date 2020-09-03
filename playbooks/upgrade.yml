@@ -19,7 +19,7 @@
     - pre-upgrade-hosts
     - upgrade-hosts
     - post-upgrade-hosts
-    - pre-upgrade-guests
+    # - pre-upgrade-guests
     - upgrade-guests
     - post-upgrade-guests
 
@@ -28,7 +28,7 @@
     - { role: "pre-upgrade-hosts", when: (upgrade_success == true | bool) } 
     - { role: "upgrade-hosts", when: (upgrade_success == true | bool) } 
     - { role: "post-upgrade-hosts", when: (upgrade_success == true | bool) } 
-    - { role: "pre-upgrade-guests", when: (upgrade_success == true | bool) } 
+    # - { role: "pre-upgrade-guests", when: (upgrade_success == true | bool) } 
     - { role: "upgrade-guests", when: (upgrade_success == true | bool) } 
     - { role: "post-upgrade-guests", when: (upgrade_success == true | bool) } 
 

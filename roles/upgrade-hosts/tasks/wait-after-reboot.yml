@@ -1,0 +1,13 @@
+  
+- name: Wait for "{{ inventory_hostname }}" to be ready after reboot
+  bigip_wait:
+    provider:
+      server: "{{ inventory_hostname }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 3600
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - upgrade-hosts
+

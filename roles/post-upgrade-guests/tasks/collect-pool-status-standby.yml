@@ -22,7 +22,7 @@
 
 - name: Extracting the status of the pools
   set_fact:
-    pool_statuses: "{{ pool_statuses|default({}) | combine({'poolName':item.name,'status':item.availability_status})  }}"
+    pool_statuses: "{{ pool_statuses|default({}) | combine({item.name:item.availability_status})  }}"
   loop: "{{ pools.ltm_pools }}"
   tags:
     - post-upgrade-guests

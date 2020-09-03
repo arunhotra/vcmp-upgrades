@@ -1,0 +1,19 @@
+- name: Switchboot to "{{ volume }}" and Reboot - "{{ item }}"
+  uri:
+    url: "https://{{ item }}/mgmt/tm/sys"
+    user: "{{ username }}"
+    password: "{{ password }}"
+    method: POST
+    body: "{'command':'reboot','volume': '{{ volume }}' }"
+    body_format: json
+    validate_certs: no
+  tags:
+    - upgrade-guests
+
+
+
+- name: pause for 60 seconds
+  pause:
+    seconds: 60
+  tags:
+    - upgrade-guests   

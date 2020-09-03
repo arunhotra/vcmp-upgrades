@@ -28,9 +28,28 @@
   tags:
     - upgrade-hosts
 
-
+- include_tasks: delete-volume.yml
+  when: 
+    standby_host|bool == true
+    and
+    ( volumes | length > 0 )
+  tags:
+    - upgrade-hosts
 
 - include_tasks: upgrade-standby-host.yml
+  when:
+   standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+
+- include_tasks: reboot-new-volume.yml
+  when:
+   standby_host|bool == true
+  tags:
+    - upgrade-hosts
+
+- include_tasks: wait-after-reboot.yml
   when:
    standby_host|bool == true
   tags:

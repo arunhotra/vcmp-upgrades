@@ -6,9 +6,12 @@
     - post-upgrade-hosts
 
 
-- name: Comparing pre and post trunk status
+- name: Comparing pre and post trunk status and setting the upgrade_success variable
   set_fact:
-    upgrade_host_success: "{{ pre_trunk_statuses | difference(post_trunk_statuses) }}"
+    upgrade_host_success: true
+  when: "{{ pre_trunk_statuses | difference(post_trunk_statuses) }} == []"
+  tags:
+    - post-upgrade-hosts
 
 
 - name: Pause the execution if the upgrade was unsuccessful

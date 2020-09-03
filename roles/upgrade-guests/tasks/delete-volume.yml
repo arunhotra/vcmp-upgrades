@@ -1,0 +1,23 @@
+- name: Parse the volume to get rid of the slash character for guest "{{ item }}"
+  set_fact:
+    volume: "{{ volumes[0].split(\"/\")[0] }}"
+  tags:
+    - upgrade-guests
+
+
+- name: Debug the volume value for guest "{{ item }}"
+  debug:
+    msg:  "{{ volume }}"
+  tags:
+    - upgrade-guests
+
+- name: Delete the closest inactive volume for guest "{{ item }}"
+  uri:
+    url: "https://{{ item }}/mgmt/tm/sys/software/volume/{{ volume }}"
+    user: "{{ username }}"
+    password: "{{ password }}"
+    method: DELETE
+    validate_certs: no
+  delegate_to: localhost
+  tags:
+    - upgrade-guests

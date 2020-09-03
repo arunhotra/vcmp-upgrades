@@ -1,3 +1,12 @@
+- name: Set random high volume when single slot
+  set_fact:
+    volume: "HD1.23"
+  when: volumes | length == 0 
+  tags:
+    - upgrade-guests
+
+
+
 - name: Install software on the VCMP guest "{{ item }}"
   f5networks.f5_modules.bigip_software_install:
     block_device_image: "{{ ISO_IMAGE }}"
@@ -8,31 +17,11 @@
       server: "{{ item }}"
       user: "{{ username }}"
       password: "{{ password }}"
+      server_port: 443
+      timeout: 7200
       validate_certs: no
   delegate_to: localhost
   tags:
     - upgrade-guests
 
-- name: Switchboot to "{{ volume }}" and Reboot - "{{ item }}"
-  uri:
-    url: "https://{{ item }}/mgmt/tm/sys"
-    user: "{{ username }}"
-    password: "{{ password }}"
-    method: POST
-    body: "{'command':'reboot','volume': '{{ volume }}' }"
-    body_format: json
-    validate_certs: no
-  tags:
-    - upgrade-guests
 
-- name: Wait for "{{ item }}" to come back after reboot
-  bigip_wait:
-    provider:
-      server: "{{ item }}"
-      user: "{{ username }}"
-      password: "{{ password }}"
-      timeout: 3600
-      validate_certs: no
-  delegate_to: localhost
-  tags:
-    - upgrade-guests

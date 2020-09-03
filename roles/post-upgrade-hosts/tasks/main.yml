@@ -6,6 +6,8 @@
 
 
 
-- include_tasks: set-varaibles-depending-on-trunk-status.yml
+- include_tasks: compare-trunk-status.yml
+  when:
+    standby_host|bool == true
   tags:
     - post-upgrade-hosts
