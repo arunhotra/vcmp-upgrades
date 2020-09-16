@@ -3,13 +3,13 @@
 
 [vcmp_hosts]
 VIP2400-R17-S45.sea.pslab.local
-VIP2400-R17-S40.sea.pslab.local
+VIP2400-R9-S10.sea.pslab.local
 
 
 
 [all:vars]
 ITSM=C042ABCDEF
-ISO_IMAGE=BIGIP-13.1.1.5-0.0.4.iso
+ISO_IMAGE=13.1.1.5.iso
 ISO_PATH= ../UPGRADES/ISO
 BACKUPS= ../UPGRADES/BACKUPS
 SCRIPTS= ../UPGRADES/SCRIPTS

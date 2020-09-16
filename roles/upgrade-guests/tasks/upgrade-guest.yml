@@ -1,0 +1,126 @@
+
+# Consolidating all the operations for upgrading guest into one task as the guests are not written in inventory and hence any variable corresponing to a guest (e.g. volume) needs to be reinitialized in every task
+
+##### PREP VOLUME
+
+- name: Initialize a variable for volumes for guest "{{ item }}"
+  vars:
+  set_fact:
+    volumes: []
+  tags:
+    - upgrade-guests
+
+- name: Collect BIG-IP facts to determine the active and available software-volumes for guest "{{ item }}"
+  bigip_device_facts:
+    gather_subset:
+      - software-volumes
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  register: ltm
+  delegate_to: localhost
+  tags:
+    - upgrade-guests
+
+- name: Find volume to install not active for guest "{{ item }}"
+  set_fact:
+    volumes: "{{ volumes|default([])+ [ item.name ] }}"
+  when: 'item.active == "no"' 
+  loop: "{{ ltm.software_volumes }}"
+  tags:
+    - upgrade-guests
+
+- name: Parse the volume to get rid of the slash character for guest "{{ item }}"
+  set_fact:
+    volume: "{{ volumes[0].split(\"/\")[0] }}"
+  tags:
+    - upgrade-guests
+
+
+#### DELETE VOLUME
+
+- name: Debug the volume value for guest "{{ item }}"
+  debug:
+    msg:  "{{ volume }}"
+  tags:
+    - upgrade-guests
+
+- name: Delete the closest inactive volume for guest "{{ item }}"
+  uri:
+    url: "https://{{ item }}/mgmt/tm/sys/software/volume/{{ volume }}"
+    user: "{{ username }}"
+    password: "{{ password }}"
+    method: DELETE
+    validate_certs: no
+  delegate_to: localhost
+  when: volumes | length > 0
+  tags:
+    - upgrade-guests
+
+##### UPGRADE
+
+- name: Set random high volume when single slot
+  set_fact:
+    volume: "HD1.5"
+  when: volumes | length == 0 
+  tags:
+    - upgrade-guests
+
+
+
+- name: Install software on the VCMP guest "{{ item }}"
+  f5networks.f5_modules.bigip_software_install:
+    block_device_image: "{{ ISO_IMAGE }}"
+    type: vcmp
+    volume: "{{ volume }}"
+    state: installed
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      server_port: 443
+      #timeout: 7200
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - upgrade-guests
+
+
+#### REBOOT INTO NEW VOLUME
+
+- name: Switchboot to "{{ volume }}" and Reboot - "{{ item }}"
+  uri:
+    url: "https://{{ item }}/mgmt/tm/sys"
+    user: "{{ username }}"
+    password: "{{ password }}"
+    method: POST
+    body: "{'command':'reboot','volume': '{{ volume }}' }"
+    body_format: json
+    validate_certs: no
+  tags:
+    - upgrade-guests
+
+
+
+- name: pause for 60 seconds
+  pause:
+    seconds: 60
+  tags:
+    - upgrade-guests   
+
+
+#### WAIT AFTER REBOOT
+
+- name: Wait for "{{ item }}" to come back after reboot
+  f5networks.f5_modules.bigip_wait:
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 3600
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - upgrade-guests

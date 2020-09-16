@@ -1,40 +1,11 @@
 --- 
 
-
-- include_tasks: prep-volume.yml
+- include_tasks: upgrade-guest.yml
   with_items: "{{ vcmp_guests }}"
   when:
     standby_host|bool == true
   tags:
     - upgrade-guests
 
-- include_tasks: delete-volume.yml
-  with_items: "{{ vcmp_guests }}"
-  when:
-    standby_host|bool == true
-    and
-    ( volumes | length > 0 )
-  tags:
-    - upgrade-guests
 
-- include_tasks: upgrade-standby-guest.yml
-  with_items: "{{ vcmp_guests }}"
-  when:
-    standby_host|bool == true
-  tags:
-    - upgrade-guests
-
-- include_tasks: reboot-new-volume.yml
-  with_items: "{{ vcmp_guests }}"
-  when:
-    standby_host|bool == true
-  tags:
-    - upgrade-guests
-
-- include_tasks: wait-after-reboot.yml
-  with_items: "{{ vcmp_guests }}"
-  when:
-    standby_host|bool == true
-  tags:
-    - upgrade-guests
 

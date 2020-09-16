@@ -1,7 +1,7 @@
 
 - name: Set random high volume when single slot
   set_fact:
-    volume: "HD1.23"
+    volume: "HD1.5"
   when: volumes | length == 0 
   tags:
     - upgrade-hosts

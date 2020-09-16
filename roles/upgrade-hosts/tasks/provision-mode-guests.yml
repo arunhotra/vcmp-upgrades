@@ -7,6 +7,7 @@
       user: "{{ username }}"
       password: "{{ password }}"
       validate_certs: no
+  delegate_to: localhost
   register: result
   tags:
     - upgrade-hosts

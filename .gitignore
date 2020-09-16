@@ -5,3 +5,4 @@ UPGRADES/TMP
 collections
 
 *.patch
+*.log
