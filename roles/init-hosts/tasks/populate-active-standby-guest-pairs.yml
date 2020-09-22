@@ -1,3 +1,20 @@
+
+
+- name: Wait for the REST api for "{{ item }}" to be available
+  bigip_wait:
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 3600
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - upgrade-hosts
+
+
+
+
 - name: Collect BIG-IP facts to determine VCMP guests
   bigip_device_info:
     gather_subset:

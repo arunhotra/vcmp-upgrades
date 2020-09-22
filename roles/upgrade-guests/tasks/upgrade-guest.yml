@@ -32,9 +32,16 @@
   tags:
     - upgrade-guests
 
+- name: Debug the volume value for guest "{{ item }}"
+  debug:
+    msg:  "{{ volumes }}"
+  tags:
+    - upgrade-guests
+
 - name: Parse the volume to get rid of the slash character for guest "{{ item }}"
   set_fact:
     volume: "{{ volumes[0].split(\"/\")[0] }}"
+  when: volumes | length > 0
   tags:
     - upgrade-guests
 
