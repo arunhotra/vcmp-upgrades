@@ -78,7 +78,7 @@
 
 
 - name: Install software on the VCMP guest "{{ item }}"
-  f5networks.f5_modules.bigip_software_install:
+  bigip_software_install:
     block_device_image: "{{ ISO_IMAGE }}"
     type: vcmp
     volume: "{{ volume }}"

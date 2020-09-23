@@ -7,7 +7,7 @@
     - upgrade-hosts
 
 - name: Install software on VCMP host "{{ inventory_hostname }}"
-  f5networks.f5_modules.bigip_software_install:
+  bigip_software_install:
     image: "{{ ISO_IMAGE }}"
     volume: "{{ volume }}"
     state: installed
@@ -16,7 +16,6 @@
       user: "{{ username }}"
       password: "{{ password }}"
       server_port: 443
-      timeout: 7200
       validate_certs: no
   delegate_to: localhost
   tags:

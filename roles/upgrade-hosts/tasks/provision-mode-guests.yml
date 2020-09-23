@@ -1,5 +1,5 @@
 - name: VCMP guest provision mode "{{ item }}"
-  f5networks.f5_modules.bigip_vcmp_guest:
+  bigip_vcmp_guest:
     name: "{{ item }}"
     state: provisioned
     provider: 

@@ -6,7 +6,6 @@
       server: "{{ item }}"
       user: "{{ username }}"
       password: "{{ password }}"
-      timeout: 3600
       validate_certs: no
   delegate_to: localhost
   tags:
