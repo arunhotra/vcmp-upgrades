@@ -6,7 +6,7 @@
     - upgrade-hosts
 
 - name: Collect BIG-IP facts to determine the active and available software-volumes
-  bigip_device_facts:
+  bigip_device_info:
     gather_subset:
       - software-volumes
     provider:

@@ -11,7 +11,7 @@
     - upgrade-guests
 
 - name: Collect BIG-IP facts to determine the active and available software-volumes for guest "{{ item }}"
-  bigip_device_facts:
+  bigip_device_info:
     gather_subset:
       - software-volumes
     provider:
@@ -120,8 +120,13 @@
 
 #### WAIT AFTER REBOOT
 
+- name: Sleep for 600 seconds to account for the reboot of the VCMP guest
+  wait_for:
+    timeout: 600
+  delegate_to: localhost
+
 - name: Wait for "{{ item }}" to come back after reboot
-  f5networks.f5_modules.bigip_wait:
+  bigip_wait:
     provider:
       server: "{{ item }}"
       user: "{{ username }}"

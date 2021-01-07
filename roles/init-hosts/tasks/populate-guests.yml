@@ -1,5 +1,5 @@
 - name: Collect BIG-IP facts to get information about the VCMP guests inside a VCMP host
-  bigip_device_facts:
+  bigip_device_info:
     gather_subset:
       - vcmp-guests
     provider:

@@ -1,15 +1,15 @@
 
 
-- name: Wait for the REST api for "{{ item }}" to be available
-  bigip_wait:
-    provider:
-      server: "{{ item }}"
-      user: "{{ username }}"
-      password: "{{ password }}"
-      validate_certs: no
-  delegate_to: localhost
-  tags:
-    - upgrade-hosts
+# - name: Wait for the REST api for "{{ item }}" to be available
+#   bigip_wait:
+#     provider:
+#       server: "{{ item }}"
+#       user: "{{ username }}"
+#       password: "{{ password }}"
+#       validate_certs: no
+#   delegate_to: localhost
+#   tags:
+#     - upgrade-hosts
 
 
 

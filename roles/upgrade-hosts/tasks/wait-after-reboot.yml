@@ -1,11 +1,18 @@
-  
+
+- name: Sleep for 900 seconds to account for the reboot of the VCMP host
+  wait_for:
+    timeout: 900
+  delegate_to: localhost
+
+
+
+
 - name: Wait for "{{ inventory_hostname }}" to be ready after reboot
   bigip_wait:
     provider:
       server: "{{ inventory_hostname }}"
       user: "{{ username }}"
       password: "{{ password }}"
-      timeout: 3600
       validate_certs: no
   delegate_to: localhost
   tags:

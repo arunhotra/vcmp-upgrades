@@ -27,7 +27,7 @@ RUN set -xe \
     && apk del build-dependencies \
     && rm -rf /var/cache/apk/* 
 
-RUN ansible-galaxy collection install f5networks.f5_modules
+RUN ansible-galaxy collection install f5networks.f5_modules -p /root/
 
 COPY . /ansible
 
