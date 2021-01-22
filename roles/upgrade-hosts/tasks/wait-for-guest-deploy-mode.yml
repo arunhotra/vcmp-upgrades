@@ -1,3 +1,10 @@
+- name: Sleep for 300 seconds to account for the vcmp guest to come back
+  wait_for:
+    timeout: 300
+  delegate_to: localhost
+  tags:
+    - upgrade-hosts
+    
 - name: Wait for "{{ item }}" to come back after deploy mode 
   bigip_wait:
     provider:

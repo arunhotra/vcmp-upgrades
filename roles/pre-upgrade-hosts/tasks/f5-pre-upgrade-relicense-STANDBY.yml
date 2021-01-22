@@ -1,9 +1,8 @@
-# - name: License bigip using the license module
-#   bigip_device_license:
-#     license_key: "SERHU-LIMRN-ESMLV-IIYRE-QDOVBJM"
-#     accept_eula: yes
-#     provider: "{{ provider }}"
-#   delegate_to: localhost
+- name: License bigip using the license module
+  bigip_device_license:
+    license_key: "{{ reg_key }}"
+    accept_eula: yes
+    provider: "{{ provider }}"
+  delegate_to: localhost
 
 
-#### - this module will be modified based on https://github.com/F5Networks/f5-ansible/issues/1810

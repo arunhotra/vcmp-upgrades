@@ -1,6 +1,6 @@
 FROM alpine:3.10
 
-ENV ANSIBLE_VERSION=2.9.2
+ENV ANSIBLE_VERSION=2.10.5
 
 LABEL org.opencontainers.image.authors=$BUILD_SIGNATURE \
     org.opencontainers.image.source="https://github.com/arunhotra/ansible-vcmp-upgrades" \
