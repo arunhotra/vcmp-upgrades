@@ -1,0 +1,15 @@
+
+- name: Disable snmp traps
+  bigip_snmp:
+    agent_authentication_traps: disabled
+    agent_status_traps: disabled
+    device_warning_traps: disabled
+    provider:
+      server: "{{ inventory_hostname }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  when: standby_host|bool == true
+  delegate_to: localhost
+  tags:
+    - pre-upgrade

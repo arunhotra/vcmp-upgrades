@@ -1,0 +1,42 @@
+--- 
+
+  - import_tasks: host-snmp-disable.yml
+    tags:
+      - pre-upgrade
+
+  - include_tasks: guest-snmp-disable.yml
+    with_items: "{{ vcmp_guests }}"
+    when:
+      standby_host|bool == true
+    tags:
+      - pre-upgrade
+
+
+  - import_tasks: host-backup-tasks.yml
+    tags:
+      - pre-upgrade
+
+  - include_tasks: guest-backup-tasks.yml
+    with_items: "{{ vcmp_guests }}"
+    when:
+      standby_host|bool == true
+    tags:
+      - pre-upgrade
+
+
+  - import_tasks: f5-upload-image.yml
+    tags:
+      - pre-upgrade
+
+  - import_tasks: collect-pre-trunk-status-standby.yml
+    when: standby_host|bool == true
+    tags:
+      - pre-upgrade
+
+
+  # - import_tasks: f5-pre-upgrade-relicense-STANDBY.yml
+  #   tags:
+  #     - pre-upgrade
+
+
+

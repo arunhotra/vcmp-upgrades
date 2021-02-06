@@ -1,7 +1,7 @@
 - name: Make Directory on local system to store .ucs and .qkview files
   shell:  test -d "{{ BACKUPS }}" || mkdir "{{ BACKUPS }}" 
   tags:
-    - pre-upgrade-hosts
+    - pre-upgrade
 
 - name: Fetch a qkview from the remote device
   block:
@@ -20,7 +20,7 @@
       pause:
         seconds: 7200    
   tags:
-    - pre-upgrade-hosts
+    - pre-upgrade
 
 - name: Fetch a new UCS block
   block:
@@ -39,20 +39,4 @@
       pause:
         seconds: 7200     
   tags:
-    - pre-upgrade-hosts
-  
-- name: Disable snmp traps
-  bigip_snmp:
-    agent_authentication_traps: disabled
-    agent_status_traps: disabled
-    device_warning_traps: disabled
-    provider:
-      server: "{{ inventory_hostname }}"
-      user: "{{ username }}"
-      password: "{{ password }}"
-      validate_certs: no
-  when: standby_host|bool == true
-  delegate_to: localhost
-  tags:
-    - pre-upgrade-hosts
-
+    - pre-upgrade

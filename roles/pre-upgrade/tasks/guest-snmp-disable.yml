@@ -1,0 +1,98 @@
+
+
+
+- name: Collect BIG-IP facts to determine VCMP guests
+  bigip_device_info:
+    gather_subset:
+      - devices
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  register: guest_pairs
+  delegate_to: localhost
+  tags:
+    - pre-upgrade
+
+
+- name: Obtaining the active guest
+  vars:
+  set_fact:
+    active_guest: "{{item.hostname}}"
+  when: item.failover_state == 'active'
+  with_items: "{{guest_pairs.devices}}"
+  tags:
+    - pre-upgrade
+
+# - name: debug guest pairs
+#   debug:  
+#     msg: "{{active_guest}}"
+#   tags:
+#     - pre-upgrade
+
+- name: Disable snmp traps on the active VCMP guest "{{ item }}"
+  bigip_snmp:
+    agent_authentication_traps: disabled
+    agent_status_traps: disabled
+    device_warning_traps: disabled
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  delegate_to: localhost
+  when: item == active_guest 
+  tags:
+    - pre-upgrade
+
+
+- name: Determine the device groups
+  bigip_device_info:
+    gather_subset:
+      - device-groups
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  register: ha_groups
+  delegate_to: localhost
+  tags:
+    - pre-upgrade
+
+# - name: debug groups
+#   debug:  
+#     msg: "{{ha_groups.device_groups}}"
+#   tags:
+#     - pre-upgrade
+
+- name: Obtaining the sync group
+  vars:
+  set_fact:
+    sync_group: "{{item.name}}"
+  when: item.type == 'sync-failover' 
+  with_items: "{{ha_groups.device_groups}}"
+  tags:
+    - pre-upgrade
+
+# - name: debug sync group
+#   debug:  
+#     msg: "{{sync_group}}"
+#   tags:
+#     - pre-upgrade
+
+- name: Sync configuration from active device to group
+  bigip_configsync_action:
+    device_group: "{{ sync_group }}"
+    overwrite_config: yes
+    sync_device_to_group: yes
+    provider:
+      server: "{{ item }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  delegate_to: localhost
+  when: item == active_guest 
+  tags:
+    - pre-upgrade

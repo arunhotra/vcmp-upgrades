@@ -1,12 +1,21 @@
 --- 
 
-  - import_tasks: f5-upload-image.yml
-    tags:
-      - pre-upgrade-hosts
+  # - import_tasks: f5-upload-image.yml
+  #   tags:
+  #     - pre-upgrade-hosts
 
   - import_tasks: f5-pre-upgrade-tasks.yml
     tags:
       - pre-upgrade-hosts
+
+# Loop over the all guests, if active, disable snmp then sync config to standby side. If standby - skip 
+
+  # - import_tasks: disable-snmp-hosts.yml
+  #   when: standby_host|bool == true
+  #   tags:
+  #     - pre-upgrade-hosts
+
+
 
 
   - import_tasks: collect-pre-trunk-status-standby.yml

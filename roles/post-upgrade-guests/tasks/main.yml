@@ -1,3 +1,12 @@
+# - include_tasks: remove-processes.yml
+#   with_items: "{{ vcmp_guests }}"
+#   when:
+#     standby_host|bool == true
+#   tags:
+#     - post-upgrade-guests
+
+
+
 - include_tasks: collect-pool-status-standby.yml
   with_items: "{{ vcmp_guests }}"
   when:

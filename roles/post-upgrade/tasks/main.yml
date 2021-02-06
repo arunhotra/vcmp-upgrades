@@ -1,0 +1,18 @@
+--- 
+
+  - import_tasks: host-snmp-enable.yml
+    tags:
+      - post-upgrade
+
+  - include_tasks: guest-snmp-enable.yml
+    with_items: "{{ vcmp_guests }}"
+    when:
+      standby_host|bool == true
+    tags:
+      - post-upgrade
+
+
+
+
+
+

@@ -4,5 +4,6 @@
     accept_eula: yes
     provider: "{{ provider }}"
   delegate_to: localhost
-
+  tags:
+    - pre-upgrade
 

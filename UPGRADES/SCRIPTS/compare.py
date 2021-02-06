@@ -6,12 +6,19 @@ import sys
 from collections import OrderedDict
 
 
+host = sys.argv[1]
+
 os.chdir("..")
 os.chdir("./TMP")
 
+infile = host + '-active_standby_guest_pairs.json'
+opfile = host + '-compare_status.json'
+
+
+
 compare_status = {}
 
-with open('active_standby_guest_pairs.json', 'r') as guests_file:
+with open(infile, 'r') as guests_file:
     guests = json.load(
         guests_file, object_pairs_hook=OrderedDict)
 
@@ -31,5 +38,6 @@ for guest_pair in guests.keys():
     status = (status_file_1_json == status_file_2_json)
     compare_status[guest_pair + '-' + guests[guest_pair]] = status
 
-with open('compare_status.json', 'w') as outfile:
+
+with open(opfile, 'w') as outfile:
     json.dump(compare_status, outfile)

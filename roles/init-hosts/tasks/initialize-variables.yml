@@ -16,6 +16,8 @@
     vcmp_guests_standby_status: {}
     active_standby_guest_pairs: {}
     standby_host: False
+    active_guest: False
+    sync_group: ''
   tags:
     - always
 

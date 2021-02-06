@@ -18,21 +18,23 @@
       private: yes
 
   roles:
-    - init-hosts
-    - pre-upgrade-hosts
-    - upgrade-hosts
-    - post-upgrade-hosts
-    - pre-upgrade-guests
-    - upgrade-guests
-    - post-upgrade-guests
+    - { role: init-hosts, tags: ['always'] }
+    - { role: pre-upgrade, tags: ['pre-upgrade'] }
+    # - { role: pre-upgrade-hosts, tags: ['pre-upgrade-hosts'] }
+    - { role: upgrade-hosts, tags: [upgrade-hosts] }
+    - { role: post-upgrade-hosts, tags: [post-upgrade-hosts] }
+    # - { role: pre-upgrade-guests, tags: [pre-upgrade-guests] }
+    - { role: upgrade-guests, tags: [upgrade-guests] }
+    - { role: post-upgrade-guests, tags: [post-upgrade-guests] }
+    - { role: post-upgrade, tags: ['post-upgrade'] }
 
-
-    - { role: "init-hosts", when: (upgrade_success == true | bool) } 
-    - { role: "pre-upgrade-hosts", when: (upgrade_success == true | bool) } 
-    - { role: "upgrade-hosts", when: (upgrade_success == true | bool) } 
-    - { role: "post-upgrade-hosts", when: (upgrade_success == true | bool) } 
-    - { role: "pre-upgrade-guests", when: (upgrade_success == true | bool) } 
-    - { role: "upgrade-guests", when: (upgrade_success == true | bool) } 
-    - { role: "post-upgrade-guests", when: (upgrade_success == true | bool) } 
-
+    - { role: "init-hosts", when: (upgrade_success == true | bool), tags: ['always'] } 
+    - { role: "pre-upgrade", when: (upgrade_success == true | bool), tags: ['pre-upgrade'] } 
+    # - { role: "pre-upgrade-hosts", when: (upgrade_success == true | bool), tags: ['pre-upgrade-hosts'] } 
+    - { role: "upgrade-hosts", when: (upgrade_success == true | bool), tags: [upgrade-hosts] } 
+    - { role: "post-upgrade-hosts", when: (upgrade_success == true | bool), tags: [post-upgrade-hosts] } 
+    # - { role: "pre-upgrade-guests", when: (upgrade_success == true | bool), tags: [pre-upgrade-guests] } 
+    - { role: "upgrade-guests", when: (upgrade_success == true | bool), tags: [upgrade-guests]  } 
+    - { role: "post-upgrade-guests", when: (upgrade_success == true | bool), tags: [post-upgrade-guests] } 
+    - { role: post-upgrade, when: (upgrade_success == true | bool), tags: ['post-upgrade'] }
 

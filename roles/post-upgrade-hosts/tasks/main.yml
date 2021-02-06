@@ -1,3 +1,13 @@
+
+# - include_tasks: remove-processes.yml
+#   when:
+#     standby_host|bool == true
+#   tags:
+#     - post-upgrade-hosts
+
+
+
+
 - include_tasks: collect-post-trunk-status-standby.yml
   when:
     standby_host|bool == true

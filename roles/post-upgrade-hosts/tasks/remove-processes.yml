@@ -1,0 +1,50 @@
+- name: Remove Services zxfrd 
+  bigip_command:
+    commands:
+      - run util bash -c 'bigstart status zxfrd'
+      - run util bash -c 'bigstart remove zxfrd'
+    wait_for: result[0] contains 'Service zxfrd has not been added to bigstart.'
+    interval: 5
+    retries: 3
+    provider:
+      server: "{{ inventory_hostname }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - post-upgrade-hosts
+
+
+
+- name: Remove Services named
+  bigip_command:
+    commands:
+      - run util bash -c 'systemctl stop named.service --now'
+      - run util bash -c 'systemctl disable named.service'
+      - run util bash -c 'mv /etc/init.d/named /etc/init.d/named.bak'
+    interval: 5
+    retries: 3
+    provider:
+      server: "{{ inventory_hostname }}"
+      user: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+  delegate_to: localhost
+  tags:
+    - post-upgrade-hosts
+
+# - name: Enable snmp traps
+#   bigip_snmp:
+#     agent_authentication_traps: enabled
+#     agent_status_traps: enabled
+#     device_warning_traps: enabled
+#     provider:
+#       server: "{{ inventory_hostname }}"
+#       user: "{{ username }}"
+#       password: "{{ password }}"
+#       validate_certs: no
+#   when: standby_host|bool == true
+#   delegate_to: localhost
+#   tags:
+#     - post-upgrade-hosts
