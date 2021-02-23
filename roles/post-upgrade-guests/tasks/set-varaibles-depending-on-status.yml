@@ -1,7 +1,7 @@
 
 
 - name: Display the JSON file content
-  shell: cat compare_status.json
+  shell: cat "{{inventory_hostname}}"-compare_status.json
   args:
     chdir: "{{ TMP }}"
   register: status
@@ -32,12 +32,31 @@
     - post-upgrade-guests
 
 
+# - name: Pause the execution if the upgrade was unsuccessful
+#   pause:
+#     seconds: 7200
+#   when: not upgrade_success | bool
+#   tags:
+#     - post-upgrade-guests
+
 - name: Pause the execution if the upgrade was unsuccessful
   pause:
-    seconds: 7200
+    prompt: "Is it ok to proceed with the upgrade of the second host/guests, yes/no"
+  register: upgrade_proceed
   when: not upgrade_success | bool
   tags:
     - post-upgrade-guests
 
+# - name: List the status
+#   debug:
+#     msg: "{{ upgrade_proceed }}"
 
+
+
+- name: Set the success variable to true based on the status
+  set_fact:
+    upgrade_success: true
+  when: not upgrade_success | bool and upgrade_proceed.user_input == 'yes'
+  tags:
+    - post-upgrade-guests
 

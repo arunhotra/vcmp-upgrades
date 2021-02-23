@@ -7,24 +7,41 @@
 
 
 
-- include_tasks: collect-pool-status-standby.yml
+# - include_tasks: collect-pool-status-standby.yml
+#   with_items: "{{ vcmp_guests }}"
+#   when:
+#     standby_host|bool == true
+#   tags:
+#     - post-upgrade-guests
+
+# - include_tasks: collect-pool-status-active.yml
+#   with_items: "{{ vcmp_guests }}"
+#   when:
+#     standby_host|bool == false
+#   tags:
+#     - post-upgrade-guests
+
+# - include_tasks: compare-status.yml
+#   tags:
+#     - post-upgrade-guests
+
+- include_tasks: tmsh-collect-pool-status-standby.yml
   with_items: "{{ vcmp_guests }}"
   when:
     standby_host|bool == true
   tags:
     - post-upgrade-guests
 
-- include_tasks: collect-pool-status-active.yml
+- include_tasks: tmsh-collect-pool-status-active.yml
   with_items: "{{ vcmp_guests }}"
   when:
     standby_host|bool == false
   tags:
     - post-upgrade-guests
 
-- include_tasks: compare-status.yml
+- include_tasks: tmsh-compare-status.yml
   tags:
     - post-upgrade-guests
-
 
 - include_tasks: set-varaibles-depending-on-status.yml
   tags:

@@ -18,7 +18,7 @@
   tags:
     - pre-upgrade-hosts
 
-- name: Extracting the status of the pools
+- name: Extracting the status of the trunks
   set_fact:
     pre_trunk_statuses: "{{ pre_trunk_statuses|default({}) | combine({item.name:item.media_status})  }}"
   loop: "{{ trunks.trunks }}"

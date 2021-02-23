@@ -1,0 +1,13 @@
+- name: Copy output to file
+  copy:
+    content: "{{ active_standby_guest_pairs }}"
+    dest: "{{ TMP }}/{{inventory_hostname}}-active_standby_guest_pairs.json"
+  tags:
+    - post-upgrade-guests
+
+- name: Run the python script to compare the active and standby statuses
+  shell: python3 compareTmsh.py "{{inventory_hostname}}"
+  args:
+    chdir: "{{ SCRIPTS }}"    
+  tags:
+    - post-upgrade-guests

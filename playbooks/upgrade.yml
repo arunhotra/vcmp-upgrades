@@ -26,15 +26,17 @@
     # - { role: pre-upgrade-guests, tags: [pre-upgrade-guests] }
     - { role: upgrade-guests, tags: [upgrade-guests] }
     - { role: post-upgrade-guests, tags: [post-upgrade-guests] }
-    - { role: post-upgrade, tags: ['post-upgrade'] }
+    # - { role: post-upgrade, tags: ['post-upgrade'] }
+
+
 
     - { role: "init-hosts", when: (upgrade_success == true | bool), tags: ['always'] } 
     - { role: "pre-upgrade", when: (upgrade_success == true | bool), tags: ['pre-upgrade'] } 
-    # - { role: "pre-upgrade-hosts", when: (upgrade_success == true | bool), tags: ['pre-upgrade-hosts'] } 
+    # # - { role: "pre-upgrade-hosts", when: (upgrade_success == true | bool), tags: ['pre-upgrade-hosts'] } 
     - { role: "upgrade-hosts", when: (upgrade_success == true | bool), tags: [upgrade-hosts] } 
     - { role: "post-upgrade-hosts", when: (upgrade_success == true | bool), tags: [post-upgrade-hosts] } 
-    # - { role: "pre-upgrade-guests", when: (upgrade_success == true | bool), tags: [pre-upgrade-guests] } 
+    # # - { role: "pre-upgrade-guests", when: (upgrade_success == true | bool), tags: [pre-upgrade-guests] } 
     - { role: "upgrade-guests", when: (upgrade_success == true | bool), tags: [upgrade-guests]  } 
     - { role: "post-upgrade-guests", when: (upgrade_success == true | bool), tags: [post-upgrade-guests] } 
-    - { role: post-upgrade, when: (upgrade_success == true | bool), tags: ['post-upgrade'] }
+    # - { role: post-upgrade, when: (upgrade_success == true | bool), tags: ['post-upgrade'] }
 

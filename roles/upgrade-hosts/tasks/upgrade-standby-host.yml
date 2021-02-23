@@ -6,6 +6,13 @@
   tags:
     - upgrade-hosts
 
+- name: Sleep for 10 seconds to account for deleting the volume
+  wait_for:
+    timeout: 10
+  delegate_to: localhost
+  tags:
+    - upgrade-hosts
+    
 - name: Install software on VCMP host "{{ inventory_hostname }}"
   bigip_software_install:
     image: "{{ ISO_IMAGE }}"
